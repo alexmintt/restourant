@@ -100,7 +100,7 @@ public class Connect {
     }
 
     public void renameUsers(int id, String log, String pas) throws SQLException {
-        PreparedStatement stat = connection.prepareStatement("UPDATE user SET login = ?, password = ? WHERE id = ?");
+        PreparedStatement stat = connection.prepareStatement("UPDATE Users SET login = ?, password = ? WHERE id = ?");
         stat.setString(1, log);
         stat.setString(2, String.valueOf(pas.hashCode()));
         stat.setInt(3, id);
@@ -147,14 +147,6 @@ public class Connect {
         return stat.executeQuery();
     }
 
-    public int getid(String login) throws Exception {
-        PreparedStatement stat = connection.prepareStatement("SELECT id FROM user WHERE login RLike ?");
-        stat.setString(1, login);
-        ResultSet res = stat.executeQuery();
-        res.next();
-        return res.getInt(1);
-    }
-
     public boolean isUser(String login, String password) throws Exception {
         PreparedStatement stat = connection.prepareStatement("SELECT COUNT(id) AS a FROM Users WHERE ? = login AND ? = password");
         stat.setString(1, login);
@@ -172,17 +164,19 @@ public class Connect {
         return res.getInt("a") == 1;
     }
 
-    public int getRoles(String login) throws Exception {
-        PreparedStatement stat = connection.prepareStatement("SELECT role_id FROM Users WHERE login RLike ?");
+    public int getID(String login, String password) throws Exception {
+        PreparedStatement stat = connection.prepareStatement("SELECT id FROM Users WHERE login RLike ? AND password RLike ?");
         stat.setString(1, login);
+        stat.setString(2, String.valueOf(password.hashCode()));
         ResultSet res = stat.executeQuery();
         res.next();
         return res.getInt(1);
     }
 
 
+
     public void deleteUser(int id) throws Exception {
-        PreparedStatement stat = connection.prepareStatement("DELETE FROM user WHERE id = ?");
+        PreparedStatement stat = connection.prepareStatement("DELETE FROM Users WHERE id = ?");
         stat.setInt(1, id);
         stat.executeUpdate();
     }
@@ -201,6 +195,30 @@ public class Connect {
         stat.setString(2, unit_of_measurement);
         stat.setInt(3, quantity_in_stock);
         stat.setInt(4, id);
+        stat.executeUpdate();
+    }
+
+    public void plusIngredient(int id) throws SQLException {
+        PreparedStatement stat = connection.prepareStatement("SELECT quantity_in_stock FROM Ingredients WHERE id = ?");
+        stat.setInt(1, id);
+        ResultSet a = stat.executeQuery();
+        a.next();
+        int b = a.getInt(1);
+        stat = connection.prepareStatement("UPDATE Ingredients SET quantity_in_stock = ? WHERE id = ?");
+        stat.setInt(1, b+1);
+        stat.setInt(2, id);
+        stat.executeUpdate();
+    }
+
+    public void minusIngredient(int id) throws SQLException {
+        PreparedStatement stat = connection.prepareStatement("SELECT quantity_in_stock FROM Ingredients WHERE id = ?");
+        stat.setInt(1, id);
+        ResultSet a = stat.executeQuery();
+        a.next();
+        int b = a.getInt(1);
+        stat = connection.prepareStatement("UPDATE Ingredients SET quantity_in_stock = ? WHERE id = ?");
+        stat.setInt(1, b-1);
+        stat.setInt(2, id);
         stat.executeUpdate();
     }
 
@@ -291,5 +309,18 @@ public class Connect {
         stat.setInt(1, id);
         ResultSet res = stat.executeQuery();
         return res;
+    }
+
+    public void changeRole(int id, String role)throws SQLException {
+        if (role.equals("waiter")){
+            PreparedStatement stat = connection.prepareStatement("UPDATE Users SET role_id = 2 WHERE id = ? ");
+            stat.setInt(1, id);
+            stat.executeUpdate();
+        }
+        else{
+            PreparedStatement stat = connection.prepareStatement("UPDATE Users SET role_id = 1 WHERE id = ? ");
+            stat.setInt(1, id);
+            stat.executeUpdate();
+        }
     }
 }
