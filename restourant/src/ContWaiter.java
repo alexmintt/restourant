@@ -6,7 +6,7 @@ public class ContWaiter extends ArrayList<Waiter> {
     public ContWaiter(Connect getdata) throws Exception {
         ResultSet res = getdata.getWaiters();
         while (res.next()) {
-            this.add(new Waiter(res.getInt(1), res.getString(2), res.getString(3), res.getInt(4)));
+            this.add(new Waiter(res.getInt(1), res.getString(2), res.getString(3), res.getString(4)));
             size++;
         }
     }

@@ -69,11 +69,11 @@ public class Connect {
         stat.executeUpdate();
     }
 
-    public void addWaiters(String name, String address, int phone_number) throws Exception {
+    public void addWaiters(String name, String address, String phone_number) throws Exception {
         PreparedStatement stat = connection.prepareStatement("INSERT Waiters(id, name, address, phone_number)  VALUES(null, ?, ?, ?);");
         stat.setString(1, name);
         stat.setString(2, address);
-        stat.setInt(3, phone_number);
+        stat.setString(3, phone_number);
         stat.executeUpdate();
     }
 

@@ -2,8 +2,8 @@ public class Waiter {
     private int id;
     private String name;
     private String address;
-    private int phone_number;
-    public Waiter (int id, String name, String address, int phone_number){
+    private String phone_number;
+    public Waiter (int id, String name, String address, String phone_number){
         this.id = id;
         this.name = name;
         this.address = address;
@@ -15,7 +15,7 @@ public class Waiter {
     }
     public String getName(){return name;}
     public String getAddress(){return address;}
-    public int getPN() {
+    public String getPN() {
         return phone_number;
     }
 }
